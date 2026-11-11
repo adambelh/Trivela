@@ -5583,6 +5583,25 @@ async function createWasm() {
       return socket.socket.readyState;
   }
 
+  function _TrivelaCopyText(textPointer) {
+      var text = UTF8ToString(textPointer);
+  
+      function showPrompt() {
+        window.prompt("Copy this invite link (Ctrl+C), then press Enter:", text);
+      }
+  
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).catch(showPrompt);
+          return;
+        }
+      } catch (error) {
+        // fall through to the prompt
+      }
+  
+      showPrompt();
+    }
+
   var ___assert_fail = (condition, filename, line, func) =>
       abort(`Assertion failed: ${UTF8ToString(condition)}, at: ` + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
 
@@ -18155,6 +18174,8 @@ var wasmImports = {
   SocketSend: _SocketSend,
   /** @export */
   SocketState: _SocketState,
+  /** @export */
+  TrivelaCopyText: _TrivelaCopyText,
   /** @export */
   __assert_fail: ___assert_fail,
   /** @export */
